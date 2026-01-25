@@ -1,0 +1,38 @@
+.home-container {
+  position: relative;
+  height: 100vh;
+  background: linear-gradient(135deg, #001529, #1677ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
+  animation: pulse 6s infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.4; transform: scale(1); }
+  to { opacity: 0.8; transform: scale(1.05); }
+}
+
+.content {
+  z-index: 1;
+  text-align: center;
+  padding: 20px;
+}
+
+.home-card {
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.home-card:hover {
+  transform: translateY(-5px);
+}
