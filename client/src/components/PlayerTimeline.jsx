@@ -51,7 +51,7 @@ export default function PlayerTimeline({ playerId }) {
   const timeline = data.timeline;
   
   // Calculate Elo Min/Max for normalization
-  const eloValues = timeline.map(t => t.elo).filter(v => v !== null);
+  const eloValues = timeline.map(t => t.rankPoints).filter(v => v !== null);
   const minElo = eloValues.length ? Math.min(...eloValues) : 0;
   const maxElo = eloValues.length ? Math.max(...eloValues) : 100;
   const eloRange = maxElo - minElo || 1; // Avoid divide by zero
@@ -79,7 +79,7 @@ export default function PlayerTimeline({ playerId }) {
       },
       {
         label: "Rank Points (Normalized)",
-        data: timeline.map(t => t.elo === null ? null : (t.elo - minElo) / eloRange),
+        data: timeline.map(t => t.rankPoints === null ? null : (t.rankPoints - minElo) / eloRange),
         borderColor: "rgb(75, 192, 192)",
         backgroundColor: "rgba(75, 192, 192, 0.5)",
         yAxisID: 'y',
@@ -118,7 +118,7 @@ export default function PlayerTimeline({ playerId }) {
                 label += ': ';
             }
             if (context.dataset.label.includes("Rank Points") || context.dataset.label.includes("Elo")) {
-                const rawElo = timeline[context.dataIndex].elo;
+                const rawElo = timeline[context.dataIndex].rankPoints;
                 const displayVal = context.raw !== null ? context.raw.toFixed(2) : "N/A";
                 return `${label}${displayVal} (Raw Points: ${rawElo})`;
             }

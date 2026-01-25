@@ -505,7 +505,7 @@ export const getPlayerTimeline = async (req, res) => {
                year,
                winRate: Number(winRate.toFixed(3)),
                weighted: Number(weighted.toFixed(3)),
-               elo: elo || null
+               rankPoints: elo || null
            });
       }
       
@@ -521,6 +521,7 @@ export const getPlayerTimeline = async (req, res) => {
               strengthMetric: "rank_points_proxy",
               strengthSource: "winnerRankPoints/loserRankPoints",
               strengthAggregation: "year_end_or_mean",
+              strengthFieldName: "rankPoints",
               eloStrategy: "year_end_rank_points",
               weightedStrategy: "year_slice_decay_to_yearend",
               winRateStrategy: "wins_over_total"
