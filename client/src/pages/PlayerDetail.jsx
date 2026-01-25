@@ -4,6 +4,7 @@ import { Card, Typography, Table, Spin, Button, message } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import api from "../api/axios";
 import FollowButton from "../components/FollowButton.jsx";
+import PlayerTimeline from "../components/PlayerTimeline.jsx";
 import { PageMotion, SectionMotion } from "../utils/PageMotion";
 
 const { Title, Text } = Typography;
@@ -143,6 +144,10 @@ export default function PlayerDetail() {
                 <Text strong>Win Rate:</Text>{" "}
                 {stats?.winRate ? `${(stats.winRate * 100).toFixed(1)}%` : "N/A"}
               </div>
+            </SectionMotion>
+
+            <SectionMotion delay={0.15}>
+               <PlayerTimeline playerId={player?.playerId ?? player?.name} />
             </SectionMotion>
 
             <SectionMotion delay={0.2}>

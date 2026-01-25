@@ -11,6 +11,7 @@ import {
   getSurfaceStats,
   getSurfaceYearlyStats,
   getSurfaceLevelStats,
+  getPlayerTimeline,
   searchPlayers,
   clearCache,
   lookupCountry,
@@ -35,6 +36,8 @@ router.get("/compare/radar", getCompareRadar);
 router.get("/surfaces", getSurfaceStats);
 router.get("/surfaces/yearly", getSurfaceYearlyStats);
 router.get("/surfaces/levels", getSurfaceLevelStats);
+
+router.get("/:id/metrics/timeline", getPlayerTimeline);
 
 router.get("/search", searchPlayers);
 router.post("/clear-cache", clearCache);

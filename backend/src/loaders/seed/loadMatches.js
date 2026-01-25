@@ -80,6 +80,11 @@ export async function loadMatches() {
             lAce: Number(row.l_ace) || null,
             lDf: Number(row.l_df) || null,
             lSvGms: Number(row.l_sv_gms) || null,
+
+            winnerRank: Number(row.winner_rank) || null,
+            winnerRankPoints: Number(row.winner_rank_points) || null,
+            loserRank: Number(row.loser_rank) || null,
+            loserRankPoints: Number(row.loser_rank_points) || null,
           });
         })
         .on("end", async () => {

@@ -25,6 +25,11 @@ const matchSchema = new mongoose.Schema({
   lAce: Number,
   lDf: Number,
   lSvGms: Number,
+
+  winnerRank: Number,
+  winnerRankPoints: Number,
+  loserRank: Number,
+  loserRankPoints: Number,
 });
 
 export const Match = mongoose.model("Match", matchSchema);

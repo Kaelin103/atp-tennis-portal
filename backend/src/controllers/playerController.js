@@ -425,6 +425,111 @@ export const getRankings = async (req, res) => {
   }
 };
 
+export const getPlayerTimeline = async (req, res) => {
+  try {
+      let playerId = req.params.id;
+      // If it looks like a number, treat as ID
+      const isId = !isNaN(Number(playerId));
+      if (isId) playerId = Number(playerId);
+      else playerId = decodeURIComponent(playerId).trim();
+
+      const startYear = Number(req.query.startYear) || 1968;
+      const endYear = Number(req.query.endYear) || new Date().getFullYear();
+
+      const filter = isId 
+          ? { $or: [{ winnerId: playerId }, { loserId: playerId }] }
+          : { $or: [{ winnerName: playerId }, { loserName: playerId }] };
+      
+      const matches = await Match.find(filter)
+          .select("tourneyDate winnerId loserId winnerName loserName winnerRankPoints loserRankPoints")
+          .sort({ tourneyDate: 1 })
+          .lean();
+
+      if (!matches.length) {
+          return res.json({ playerId, name: playerId, timeline: [], meta: {} });
+      }
+      
+      const playerName = isId 
+          ? (matches[0].winnerId === playerId ? matches[0].winnerName : matches[0].loserName)
+          : playerId;
+
+      const yearsMap = new Map();
+      
+      for (const m of matches) {
+          if (!m.tourneyDate) continue;
+          const y = new Date(m.tourneyDate).getFullYear();
+          if (y < startYear || y > endYear) continue;
+          
+          if (!yearsMap.has(y)) yearsMap.set(y, []);
+          yearsMap.get(y).push(m);
+      }
+
+      const timeline = [];
+      const lambda = 0.8; 
+
+      for (const [year, yearMatches] of yearsMap.entries()) {
+           // 1. Win Rate
+           const wins = yearMatches.filter(m => isId ? m.winnerId === playerId : m.winnerName === playerName).length;
+           const total = yearMatches.length;
+           const winRate = total ? wins / total : 0;
+
+           // 2. Weighted (Slice to year, Decay relative to year end)
+           const yearEnd = new Date(year, 11, 31);
+           let wSum = 0;
+           let wTotal = 0;
+           
+           for (const m of yearMatches) {
+               const msPerDay = 24 * 60 * 60 * 1000;
+               const daysAgo = (yearEnd - new Date(m.tourneyDate)) / msPerDay;
+               const d = Math.max(0, daysAgo);
+               
+               const weight = Math.exp(-lambda * (d / 365));
+               
+               if (isId ? m.winnerId === playerId : m.winnerName === playerName) {
+                   wSum += weight;
+               }
+               wTotal += weight;
+           }
+           const weighted = smoothRate(wSum, wTotal);
+
+           // 3. Elo (Year End) - using Rank Points as proxy
+           const lastMatch = yearMatches[yearMatches.length - 1];
+           let elo = null;
+           if (isId ? lastMatch.winnerId === playerId : lastMatch.winnerName === playerName) {
+               elo = lastMatch.winnerRankPoints;
+           } else {
+               elo = lastMatch.loserRankPoints;
+           }
+           
+           timeline.push({
+               year,
+               winRate: Number(winRate.toFixed(3)),
+               weighted: Number(weighted.toFixed(3)),
+               elo: elo || null
+           });
+      }
+      
+      timeline.sort((a, b) => a.year - b.year);
+
+      res.json({
+          playerId,
+          name: playerName,
+          timeline,
+          meta: {
+              startYear,
+              endYear,
+              eloStrategy: "year_end_rank_points",
+              weightedStrategy: "year_slice_decay_to_yearend",
+              winRateStrategy: "wins_over_total"
+          }
+      });
+
+  } catch (err) {
+      console.error("❌ getPlayerTimeline error:", err);
+      res.status(500).json({ message: "Failed to fetch timeline", error: err.message });
+  }
+};
+
 // Dynamic rankings over a sliding window (default: last 500 days)
 // GET /api/players/rankings/dynamic?days=500&surface=clay&limit=20&minMatches=10
 export const getDynamicRankings = async (req, res) => {
