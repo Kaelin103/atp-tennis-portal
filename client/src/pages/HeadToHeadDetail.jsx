@@ -334,7 +334,7 @@ export default function HeadToHeadDetail() {
           bName={player2} 
           aPid={player1Id}
           bPid={player2Id}
-          surface={surface}
+          surface="All"
         />
       </Card>
     </motion.div>

@@ -78,7 +78,7 @@ export default function PlayerTimeline({ playerId }) {
         pointRadius: 3,
       },
       {
-        label: "Elo (Normalized)",
+        label: "Rank Points (Normalized)",
         data: timeline.map(t => t.elo === null ? null : (t.elo - minElo) / eloRange),
         borderColor: "rgb(75, 192, 192)",
         backgroundColor: "rgba(75, 192, 192, 0.5)",
@@ -117,10 +117,10 @@ export default function PlayerTimeline({ playerId }) {
             if (label) {
                 label += ': ';
             }
-            if (context.dataset.label.includes("Elo")) {
+            if (context.dataset.label.includes("Rank Points") || context.dataset.label.includes("Elo")) {
                 const rawElo = timeline[context.dataIndex].elo;
                 const displayVal = context.raw !== null ? context.raw.toFixed(2) : "N/A";
-                return `${label}${displayVal} (Raw: ${rawElo})`;
+                return `${label}${displayVal} (Raw Points: ${rawElo})`;
             }
             if (context.parsed.y !== null) {
                 label += context.parsed.y.toFixed(3);
@@ -167,7 +167,7 @@ export default function PlayerTimeline({ playerId }) {
             <Line options={options} data={chartData} />
         </div>
         <div style={{ marginTop: 10, textAlign: 'center', color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>
-            Elo (Rank Points) is normalized to 0-1 range. Raw Min: {minElo}, Max: {maxElo}.
+            Rank Points (Strength Proxy) are normalized to 0-1 range. Raw Min: {minElo}, Max: {maxElo}.
         </div>
     </Card>
   );

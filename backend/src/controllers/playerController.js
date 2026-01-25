@@ -518,6 +518,9 @@ export const getPlayerTimeline = async (req, res) => {
           meta: {
               startYear,
               endYear,
+              strengthMetric: "rank_points_proxy",
+              strengthSource: "winnerRankPoints/loserRankPoints",
+              strengthAggregation: "year_end_or_mean",
               eloStrategy: "year_end_rank_points",
               weightedStrategy: "year_slice_decay_to_yearend",
               winRateStrategy: "wins_over_total"
