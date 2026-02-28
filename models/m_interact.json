@@ -1,0 +1,8 @@
+{
+  "model_name": "logistic_time_aware_interact",
+  "features": ["dRank", "dDecay", "dRank:dDecay"],
+  "intercept": -4.3493e-17,
+  "beta_dRank": 0.0021,
+  "beta_dDecay": 0.0256,
+  "beta_interaction": 3.1836e-20
+}

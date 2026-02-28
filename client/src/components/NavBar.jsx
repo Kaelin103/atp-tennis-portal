@@ -71,6 +71,9 @@ export default function NavBar() {
         <Link to="/surfacestats" style={{ color: "#fff" }}>
           Surface Stats
         </Link>
+        <Link to="/predict" style={{ color: "#fff" }}>
+          Prediction
+        </Link>
       </div>
 
       <div style={{ marginLeft: "auto", display: "flex", gap: 12 }}>

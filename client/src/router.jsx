@@ -15,10 +15,12 @@ import Rankings from "./pages/Rankings.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx";
 import AdminFollows from "./pages/AdminFollows.jsx";
+import PredictPage from "./pages/PredictPage.jsx";
 
 export default function AppRouter() {
   return (
     <Routes>
+      <Route path="/predict" element={<PredictPage />} />
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
