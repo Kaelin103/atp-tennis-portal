@@ -9,6 +9,7 @@ import matchRoutes from "./routes/matchRoutes.js";
 import playerRoutes from "./routes/playerRoutes.js";
 import followRoutes from "./routes/followRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import predictRoutes from "./routes/predictRoutes.js";
 
 export function createApp() {
   const app = express();
@@ -51,6 +52,7 @@ export function createApp() {
   app.use("/api/players", playerRoutes);
   app.use("/api/follow", followRoutes);
   app.use("/api/admin", adminRoutes);
+  app.use("/api/predict", predictRoutes);
 
   app.get("/health", (_, res) =>
     res.json({ ok: true, message: "✅ ATP Tennis Portal backend is alive!" })

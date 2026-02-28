@@ -7,7 +7,9 @@ const playerSchema = new mongoose.Schema({
   lastName: String,
   hand: String, // R or L
   birthDate: Date,
-  countryCode: String
+  countryCode: String,
+  rank: Number,
+  decay_score: Number
 });
 
 export const Player = mongoose.model("Player", playerSchema);

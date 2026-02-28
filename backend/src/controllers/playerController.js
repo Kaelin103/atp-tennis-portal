@@ -1068,14 +1068,33 @@ export const getSurfaceLevelStats = async (req, res) => {
 
 export const searchPlayers = async (req, res) => {
   try {
-    const { name } = req.query;
-    const regex = new RegExp(name || "", "i");
-    const players = await Player.find({ $or: [{ firstName: regex }, { lastName: regex }] })
-      .limit(50)
+    const q = (req.query.q || "").trim();
+    const limit = Math.min(parseInt(req.query.limit || "10", 10), 20);
+
+    if (!q) return res.json({ items: [] });
+
+    // 模糊匹配：firstName / lastName（大小写不敏感）
+    const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+
+    const items = await Player.find({
+      $or: [{ firstName: regex }, { lastName: regex }],
+    })
+      .select("_id firstName lastName rank decay_score countryCode")
+      .limit(limit)
       .lean();
-    res.json(players);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+
+    res.json({
+      items: items.map((p) => ({
+        id: String(p._id),
+        name: `${p.firstName ?? ""} ${p.lastName ?? ""}`.trim(),
+        rank: p.rank ?? null,
+        decay: p.decay_score ?? null,
+        countryCode: p.countryCode ?? null,
+      })),
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Search failed" });
   }
 };
 
