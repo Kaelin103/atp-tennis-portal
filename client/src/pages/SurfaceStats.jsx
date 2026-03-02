@@ -15,7 +15,7 @@ import {
   LineChart,
   Line,
 } from "recharts";
-import publicApi from "../api/publicAxios";
+import api from "../api/axios";
 
 const { Title, Paragraph } = Typography;
 
@@ -54,7 +54,7 @@ export default function SurfaceStats() {
     (async () => {
       try {
 // ✅ Fix API path
-        const res = await publicApi.get("/players/surfaces");
+        const res = await api.get("/players/surfaces");
         const raw = res.data?.stats || res.data?.surfaces || [];
         const normalized = raw.map((d, i) => ({
           rank: i + 1,
@@ -77,7 +77,7 @@ export default function SurfaceStats() {
     if (view !== "yearly") return;
     const fetchYearly = async () => {
       try {
-        const res = await publicApi.get(`/players/surfaces/yearly?start=${yearRange.start}&end=${yearRange.end}`);
+        const res = await api.get(`/players/surfaces/yearly?start=${yearRange.start}&end=${yearRange.end}`);
         const data = res.data?.yearly || {};
         setYearly({ Hard: data.Hard || [], Clay: data.Clay || [], Grass: data.Grass || [], Carpet: data.Carpet || [], Unknown: data.Unknown || [] });
       } catch (err) {
@@ -93,7 +93,7 @@ export default function SurfaceStats() {
     if (view !== "levels") return;
     const fetchLevels = async () => {
       try {
-        const res = await publicApi.get("/players/surfaces/levels");
+        const res = await api.get("/players/surfaces/levels");
         const data = res.data?.levels || {};
         setLevels({ Hard: data.Hard || [], Clay: data.Clay || [], Grass: data.Grass || [], Carpet: data.Carpet || [], Unknown: data.Unknown || [] });
       } catch (err) {
