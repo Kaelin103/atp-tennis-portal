@@ -1079,7 +1079,7 @@ export const searchPlayers = async (req, res) => {
     const items = await Player.find({
       $or: [{ firstName: regex }, { lastName: regex }],
     })
-      .select("_id firstName lastName rank decay_score countryCode")
+      .select("_id firstName lastName rank decay_score form_score countryCode")
       .limit(limit)
       .lean();
 
@@ -1089,6 +1089,7 @@ export const searchPlayers = async (req, res) => {
         name: `${p.firstName ?? ""} ${p.lastName ?? ""}`.trim(),
         rank: p.rank ?? null,
         decay: p.decay_score ?? null,
+        form_score: p.form_score ?? null,
         countryCode: p.countryCode ?? null,
       })),
     });

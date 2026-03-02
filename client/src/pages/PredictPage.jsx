@@ -42,7 +42,7 @@ export default function PredictPage() {
         // Backend returns "id", but user mentioned "_id", supporting both defensively
         value: p.id || p._id,
         // Backend returns "name", but supporting firstName/lastName defensively
-        label: `${p.name || (p.firstName ? `${p.firstName} ${p.lastName}` : "Unknown")} (Rank: ${p.rank ?? "?"}, Decay: ${p.decay != null ? p.decay.toFixed(2) : (p.decay_score != null ? p.decay_score.toFixed(2) : "?")})`,
+        label: `${p.name || (p.firstName ? `${p.firstName} ${p.lastName}` : "Unknown")} (Rank: ${p.rank ?? "NA"} Form: ${p.form_score != null ? p.form_score.toFixed(2) : "NA"})`,
       }));
       setOpts(opts);
     } catch (err) {
@@ -317,7 +317,7 @@ export default function PredictPage() {
                   }}
                 >
                   <div>Δ Rank: {result.features.dRank}</div>
-                  <div>Δ Decay: {result.features.dDecay?.toFixed(3)}</div>
+                  <div>Δ Form: {result.features.dForm?.toFixed(3)}</div>
                 </div>
               </Col>
 

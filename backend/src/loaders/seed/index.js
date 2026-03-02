@@ -1,6 +1,7 @@
 // src/loaders/seed/index.js
 import { loadPlayers } from "./loadPlayers.js";
 import { loadMatches } from "./loadMatches.js";
+import { updatePlayerStats } from "./update_player_stats.js";
 import { connectDB } from "../../config/db.js";
 import mongoose from "mongoose";
 import { Player } from "../../models/Player.js";
@@ -24,6 +25,10 @@ async function main() {
   } else {
     console.log(`ℹ️ Matches already present: ${matchCount}. Skipping loadMatches.`);
   }
+
+  // Always run stats update to ensure form_score is fresh
+  await updatePlayerStats();
+
   console.log("✅ Seed process completed.");
 }
 

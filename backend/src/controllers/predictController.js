@@ -59,59 +59,60 @@ export const predictMatch = async (req, res) => {
       return res.status(404).json({ message: "Player not found" });
     }
 
-    // 2) Check for required fields (rank + decay_score)
-    // Using rank and decay_score as per Player model update
+    // 2) Check for required fields (rank + form_score)
     const rankA = playerA.rank;
     const rankB = playerB.rank;
-    const decayA = playerA.decay_score;
-    const decayB = playerB.decay_score;
+    const formA = playerA.form_score;
+    const formB = playerB.form_score;
 
     if (
       rankA === undefined || rankA === null ||
       rankB === undefined || rankB === null ||
-      decayA === undefined || decayA === null ||
-      decayB === undefined || decayB === null
+      formA === undefined || formA === null ||
+      formB === undefined || formB === null
     ) {
       return res.status(400).json({
-        message: "Missing required player fields (rank / decay_score). Please check DB schema and data.",
-        playerA: { name: playerA.name, rank: rankA, decay: decayA },
-        playerB: { name: playerB.name, rank: rankB, decay: decayB }
+        message: "Missing required player fields (rank / form_score). Please check DB schema and data.",
+        playerA: { name: playerA.name, rank: rankA, form: formA },
+        playerB: { name: playerB.name, rank: rankB, form: formB }
       });
     }
 
     // 3) Calculate features
-    const dRank = rankB - rankA; // Note: dRank usually means (Rank_B - Rank_A) or similar. 
-                                 // If model was trained as (P1 - P2), and higher rank (lower number) is better...
-                                 // Let's stick to user's logic: dRank = rankB - rankA
-    const dDecay = decayA - decayB;
-    const interaction = dRank * dDecay;
+    // User requested: dRank = rankA - rankB
+    const dRank = rankA - rankB; 
+    const dForm = formA - formB; // dW -> dForm
+    const interaction = dRank * dForm;
 
     // 4) Logistic regression prediction
+    // Mapping model coefficients: dDecay -> dForm
     const z = model.intercept + 
               model.beta_dRank * dRank + 
-              model.beta_dDecay * dDecay + 
+              model.beta_dDecay * dForm + 
               model.beta_interaction * interaction;
               
     const pAWin = sigmoid(z);
 
     return res.json({
-      model: model.model_name || "loaded_model",
+      model: model.model_name || "logistic_time_aware_interact",
       playerA: {
         id: playerA._id,
         name: `${playerA.firstName} ${playerA.lastName}`,
         rank: rankA,
-        decay: decayA
+        form: formA
       },
       playerB: {
         id: playerB._id,
         name: `${playerB.firstName} ${playerB.lastName}`,
         rank: rankB,
-        decay: decayB
+        form: formB
       },
       features: {
         dRank,
-        dDecay,
-        interaction
+        dForm,           // New standard
+        interaction,
+        dDecay: dForm,   // Legacy (temporary)
+        dDecay_legacy: dForm // Legacy (temporary explicit)
       },
       probability: {
         pAWin: Number(pAWin.toFixed(4)),
