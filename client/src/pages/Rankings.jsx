@@ -611,29 +611,29 @@ export default function Rankings() {
     },
   };
 
-  if (!user) {
-    return (
-      <PageMotion>
-        <div
-          style={{
-            height: "70vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            color: "#ddd",
-          }}
-        >
-          <AntTitle level={3} style={{ color: "#fff" }}>
-            🔒 Please log in to view ATP Player Rankings
-          </AntTitle>
-          <Text style={{ color: "#bbb" }}>
-            Log in to explore detailed ATP rankings and player insights.
-          </Text>
-        </div>
-      </PageMotion>
-    );
-  }
+  // if (!user) {
+  //   return (
+  //     <PageMotion>
+  //       <div
+  //         style={{
+  //           height: "70vh",
+  //           display: "flex",
+  //           justifyContent: "center",
+  //           alignItems: "center",
+  //           flexDirection: "column",
+  //           color: "#ddd",
+  //         }}
+  //       >
+  //         <AntTitle level={3} style={{ color: "#fff" }}>
+  //           🔒 Please log in to view ATP Player Rankings
+  //         </AntTitle>
+  //         <Text style={{ color: "#bbb" }}>
+  //           Log in to explore detailed ATP rankings and player insights.
+  //         </Text>
+  //       </div>
+  //     </PageMotion>
+  //   );
+  // }
 
   return (
     <PageMotion>
