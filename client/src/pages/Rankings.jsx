@@ -2,8 +2,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Card, Table, Select, Typography, Spin, Empty, Segmented, Button, Space } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import api from "../api/axios";
+// import { useAuth } from "../context/AuthContext";
+import publicApi from "../api/publicAxios";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -86,7 +86,7 @@ const toISO2 = (code) => {
 };
 
 export default function Rankings() {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const navigate = useNavigate();
   const chartRef = useRef(null);
 
@@ -153,7 +153,7 @@ export default function Rankings() {
   ];
 
   useEffect(() => {
-    if (!user) return;
+    // if (!user) return;
 
     async function fetchRankings() {
       setLoading(true);
@@ -188,7 +188,7 @@ export default function Rankings() {
           url = `/players/rankings/dynamic?${qs.toString()}`;
         }
 
-        const res = await api.get(url);
+        const res = await publicApi.get(url);
         setRows(Array.isArray(res.data?.players) ? res.data.players : []);
       } catch (err) {
         console.error("❌ Failed to fetch rankings:", err);
@@ -199,7 +199,7 @@ export default function Rankings() {
     }
 
     fetchRankings();
-  }, [filters, rankMode, windowPreset, useBonus, useDecay, lambda, sortBy, algo, user]);
+  }, [filters, rankMode, windowPreset, useBonus, useDecay, lambda, sortBy, algo]); // removed user dependency
 
   // Detect container width to decide orientation and label condensation
   useEffect(() => {
@@ -217,7 +217,9 @@ export default function Rankings() {
 
   // Load per-surface rankings when viewing surface trend
   useEffect(() => {
-    if (!user || chartMode !== "surface") return;
+    // if (!user || chartMode !== "surface") return;
+    if (chartMode !== "surface") return;
+
     const loadSurface = async () => {
       try {
         setSurfaceLoading(true);
@@ -226,7 +228,7 @@ export default function Rankings() {
         qsBase.set("minMatches", String(filters.minMatches));
         qsBase.set("limit", String(Math.max(chartLimit, 20)));
         const surfaces = ["Hard", "Clay", "Grass", "Carpet"];
-        const calls = surfaces.map((s) => api.get(`/players/rankings?${qsBase.toString()}&surface=${encodeURIComponent(s)}`));
+        const calls = surfaces.map((s) => publicApi.get(`/players/rankings?${qsBase.toString()}&surface=${encodeURIComponent(s)}`));
         const results = await Promise.allSettled(calls);
         const next = { Hard: [], Clay: [], Grass: [], Carpet: [] };
         results.forEach((r, i) => {
@@ -243,15 +245,17 @@ export default function Rankings() {
       }
     };
     loadSurface();
-  }, [user, chartMode, filters, chartLimit]);
+  }, [chartMode, filters, chartLimit]); // removed user dependency
 
   // Load per-surface yearly trend when chartMode === 'yearly'
   useEffect(() => {
-    if (!user || chartMode !== "yearly") return;
+    // if (!user || chartMode !== "yearly") return;
+    if (chartMode !== "yearly") return;
+
     const loadYearly = async () => {
       try {
         setYearlyLoading(true);
-        const res = await api.get(`/players/surfaces/yearly?start=${yearRange.start}&end=${yearRange.end}`);
+        const res = await publicApi.get(`/players/surfaces/yearly?start=${yearRange.start}&end=${yearRange.end}`);
         const data = res.data?.yearly || {};
         setYearlyData({
           Hard: data.Hard || [],
@@ -268,15 +272,17 @@ export default function Rankings() {
       }
     };
     loadYearly();
-  }, [user, chartMode, yearRange]);
+  }, [chartMode, yearRange]); // removed user dependency
 
   // Load tournament level distribution when chartMode === 'levels'
   useEffect(() => {
-    if (!user || chartMode !== "levels") return;
+    // if (!user || chartMode !== "levels") return;
+    if (chartMode !== "levels") return;
+
     const loadLevels = async () => {
       try {
         setLevelsLoading(true);
-        const res = await api.get(`/players/surfaces/levels`);
+        const res = await publicApi.get(`/players/surfaces/levels`);
         const data = res.data?.levels || {};
         setLevelsData({
           Hard: data.Hard || [],
@@ -293,7 +299,7 @@ export default function Rankings() {
       }
     };
     loadLevels();
-  }, [user, chartMode]);
+  }, [chartMode]); // removed user dependency
 
   const columnsClassic = [
     { title: "Rank", dataIndex: "rank", key: "rank", width: 80 },
