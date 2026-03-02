@@ -1,5 +1,5 @@
 // src/pages/SurfaceStats.jsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Table, Typography, Spin, Tag, Card, message, Segmented, Select } from "antd";
 import {
   PieChart,
@@ -138,7 +138,7 @@ export default function SurfaceStats() {
   const VisibleContainer = ({ children, height = 300 }) => {
     const ref = useRef(null);
     const [ready, setReady] = useState(false);
-    useEffect(() => {
+    useLayoutEffect(() => {
       const el = ref.current;
       if (!el) return;
       const ro = new ResizeObserver((entries) => {
@@ -151,7 +151,7 @@ export default function SurfaceStats() {
       return () => ro.disconnect();
     }, []);
     return (
-      <div ref={ref} style={{ width: "100%", height }}>
+      <div ref={ref} style={{ width: "100%", height, minWidth: 200, minHeight: 200 }}>
         {ready ? children : (
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
             <Spin />
