@@ -153,9 +153,31 @@ Export Model Parameters (JSON)
         │
         ▼
 Backend API Inference (Node.js / Express)
+        │
+        ▼
+Frontend Dashboard / Prediction Display (React)
 ```
 This architecture keeps production lightweight while preserving a research-focused training workflow.
 
+---
+## Project Structure
+
+```text
+atp-tennis-portal/
+├─ frontend/                        # React frontend application
+├─ backend/                         # Node.js / Express backend APIs
+├─ datasets/                        # ATP datasets and analysis resources
+│  ├─ tennis_atp/
+│  └─ analysis/
+├─ models/                          # Exported model files / trained parameters
+├─ scripts/                         # Data processing and modelling scripts
+├─ outputs/                         # Generated figures / evaluation results
+├─ docs/                            # Additional project documentation
+├─ .gitignore
+├─ CONTRIBUTING.md
+├─ LICENSE
+└─ README.md
+```
 ## Model Workflow
 
 A core implementation principle of this project is the explicit separation between **training** and **production inference**.
@@ -194,6 +216,8 @@ This design makes the system:
 
 ### Dynamic Ranking (52 weeks)
 
+### Classic Ranking
+
 ```text
 /api/players/rankings/dynamic?minMatches=5&limit=50&weeks=52&sortBy=winRate&algo=classic
 ```
@@ -217,6 +241,8 @@ This design makes the system:
 /api/players/rankings/dynamic?minMatches=5&limit=50&weeks=52&decay=true&lambda=0.8&sortBy=weighted&algo=classic
 /api/players/rankings/dynamic?minMatches=5&limit=50&weeks=104&decay=true&lambda=0.8&sortBy=weighted&algo=classic
 ```
+
+## Quick Start
 
 ### 1. Clone the repository
 
@@ -306,6 +332,7 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening an issue or pull
 ## Author
 
 **Linhan Yue**  
+Student ID: 5177547  
 BSc Computer Science  
 Teesside University
 
@@ -314,6 +341,3 @@ Teesside University
 ## License
 
 This project is released under the [MIT License](./LICENSE).
-        │
-        ▼
-Frontend Dashboard / Prediction Display (React)
