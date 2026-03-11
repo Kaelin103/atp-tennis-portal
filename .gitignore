@@ -1,5 +1,47 @@
+# dependencies
 node_modules/
+
+# build outputs
 dist/
+build/
+coverage/
+.next/
+out/
+
+# environment files
 .env
-.DS_Store
+.env.*
+!.env.example
+
+# logs
+logs/
+*.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# R files
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# generated outputs
+outputs/
+
+# optional screenshot cache files
+docs/screenshots/.DS_Store
+
+# temporary files
+*.tmp
+*.temp
+
+# archives
+*.zip
